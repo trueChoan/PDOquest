@@ -5,7 +5,7 @@ require 'connect.php';
 $pdo = new PDO(DSN, USER, PASS);
 //DSN: Data Source Name
 
-// je vérifie si Bing est déjà dans ma database, si oui la methode exec ne s'execute pas. 
+// Je rajoute bing a la main et je vérifie si Bing est déjà dans ma database, si oui la methode exec ne s'execute pas. 
 // je peux refresh la page et avoir une seule ligne Bing.
 
 $bing = "SELECT * FROM friend WHERE lastname = 'bing'";
@@ -14,6 +14,10 @@ if (empty($bing)) {
     $statebing = $pdo->exec($query);
 }
 
+$query = "SELECT * FROM friend";
+$statement = $pdo->query($query);
+
+$friends = $statement->fetchAll(PDO::FETCH_ASSOC);
 /**
  * si la methode du formulaire est POST on récupère les data après nettoyage, 
  * puis cherck des erreurs si form vide ou trop long.
@@ -42,18 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
         $statement->bindValue(':lastname', $data['lastname'], PDO::PARAM_STR);
 
         $statement->execute();
+        header("Location: /");
     }
 }
-/**
- * Ensuite on selection tous dans la table friend de la db
- * on recupere un tableau associatif avec fetchAll
- * et on redirige vers index.php pour un affichage de la liste des friends actualisé a chaque ajout du formulaire.
- */
-$query = "SELECT * FROM friend";
-$statement = $pdo->query($query);
 
-$friends = $statement->fetchAll(PDO::FETCH_ASSOC);
-header('index.php');
+
 ?>
 
 <!DOCTYPE html>
