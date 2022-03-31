@@ -27,8 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 
     $errors = [];
 
-    if (empty($data['firstname']) || empty($data['lastname']) && mb_strlen($data['firstname']) < 45 && mb_strlen($data['lastname']) < 45) {
+    if (empty($data['firstname']) || empty($data['lastname'])) {
         $errors[] = "both name are mandatory and must be less than 45 characteres";
+    }
+    if (mb_strlen($data['firstname']) > 45  || mb_strlen($data['lastname']) > 45) {
+        $errors[] = "Name must be less than 45 characters";
     }
 
     if (empty($errors)) {
@@ -44,8 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
 /**
  * Ensuite on selection tous dans la table friend de la db
  * on recupere un tableau associatif avec fetchAll
- * et on redirige vers index.php 
- * pour un affichage de la liste des friends actualisé a chaque ajout du formulaire.
+ * et on redirige vers index.php pour un affichage de la liste des friends actualisé a chaque ajout du formulaire.
  */
 $query = "SELECT * FROM friend";
 $statement = $pdo->query($query);
